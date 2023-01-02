@@ -19,6 +19,10 @@ describe("ETHDaddy", () => {
     // Deploy contract
     const ETHDaddy = await ethers.getContractFactory('ETHDaddy')
     ethDaddy = await ETHDaddy.deploy('WRI Domain', 'WRID')
+
+    // List a domain
+    const transaction = await ethDaddy.connect(deployer).list("Web3.eth", tokens(10))
+    await transaction.wait()
   })
 
   describe("Deployment", () => {
@@ -35,6 +39,21 @@ describe("ETHDaddy", () => {
     it('Sets the owner', async () => {
       const result = await ethDaddy.owner()
       expect(result).to.equal(deployer.address)
+    })
+
+    it('Returns the max supply', async () => {
+      const result = await ethDaddy.maxSupply()
+      expect(result).to.equal(1)
+    })
+     
+  })
+
+  describe("Domain", () => {
+    it('Returns domain values', async () => {
+      let domain = await ethDaddy.domains(1)
+      expect(domain.name).to.equal("Web3.eth")
+      expect(domain.cost).to.equal(tokens(10))
+      expect(domain.isOwned).to.equal(false)
     })
   })
 
