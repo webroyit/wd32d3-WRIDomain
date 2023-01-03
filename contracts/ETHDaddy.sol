@@ -41,4 +41,8 @@ contract ETHDaddy is ERC721 {
     domains[maxSupply] = Domain(_name, _cost, false);
   }
 
+  function getDomain(uint256 _id) public view returns (Domain memory) {
+    return domains[_id];
+  }
+
 }

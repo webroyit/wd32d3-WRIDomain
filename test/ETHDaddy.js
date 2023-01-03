@@ -50,7 +50,7 @@ describe("ETHDaddy", () => {
 
   describe("Domain", () => {
     it('Returns domain values', async () => {
-      let domain = await ethDaddy.domains(1)
+      let domain = await ethDaddy.getDomain(1)
       expect(domain.name).to.equal("Web3.eth")
       expect(domain.cost).to.equal(tokens(10))
       expect(domain.isOwned).to.equal(false)
