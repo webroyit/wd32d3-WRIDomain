@@ -45,6 +45,11 @@ describe("ETHDaddy", () => {
       const result = await ethDaddy.maxSupply()
       expect(result).to.equal(1)
     })
+    
+    it('Returns the total supply', async () => {
+      const result = await ethDaddy.totalSupply()
+      expect(result).to.equal(0)
+    })
      
   })
 
@@ -54,6 +59,31 @@ describe("ETHDaddy", () => {
       expect(domain.name).to.equal("Web3.eth")
       expect(domain.cost).to.equal(tokens(10))
       expect(domain.isOwned).to.equal(false)
+    })
+  })
+
+  describe("Minting", () => {
+    const ID = 1
+    const AMOUNT = ethers.utils.parseUnits("10", "ether")
+
+    beforeEach(async () => {
+      const transaction = await ethDaddy.connect(owner1).mint(ID, { value: AMOUNT })
+      await transaction.wait()
+    })
+
+    it('Updates the owner', async () => {
+      const owner = await ethDaddy.ownerOf(ID)
+      expect(owner).to.be.equal(owner1.address)
+    })
+
+    it('Updates the domain status', async () => {
+      const domain = await ethDaddy.getDomain(ID)
+      expect(domain.isOwned).to.be.equal(true)
+    })
+
+    it('Updates the contract balance', async () => {
+      const result = await ethDaddy.getBalance()
+      expect(result).to.equal(AMOUNT)
     })
   })
 
