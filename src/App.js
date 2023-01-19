@@ -30,11 +30,10 @@ function App() {
 
   return (
     <div>
-
+      <Navigation account={account} setAccount={setAccount} />
       <div className='cards__section'>
 
         <h2 className='cards__title'>Welcome to ETH Daddy</h2>
-        <p>{account}</p>
 
       </div>
 
