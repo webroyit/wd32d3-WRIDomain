@@ -13,9 +13,25 @@ import ETHDaddy from './abis/ETHDaddy.json'
 import config from './config.json';
 
 function App() {
+  const [provider, setProvider] = useState(null)
   const [account, setAccount] = useState(null)
+  const [ethDaddy, setETHDaddy] = useState(null)
 
   const loadBlockchainData = async () => {
+    // Metamask mounts window.ethereum to our window
+    // Connect ether to Metamask
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    setProvider(provider)
+
+    const network = await provider.getNetwork()
+
+    // Get copy of smart contract in JavaScript
+    const ethDaddy = new ethers.Contract(config[network.chainId].ETHDaddy.address, ETHDaddy, provider)
+    setETHDaddy(ethDaddy)
+
+    const maxSupply = await ethDaddy.maxSupply()
+    console.log(maxSupply.toString())
+    
     window.ethereum.on('accountsChanged', async () => {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
       const account = ethers.utils.getAddress(accounts[0])
