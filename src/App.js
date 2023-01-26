@@ -16,6 +16,7 @@ function App() {
   const [provider, setProvider] = useState(null)
   const [account, setAccount] = useState(null)
   const [ethDaddy, setETHDaddy] = useState(null)
+  const [domains, setDomains] = useState([])
 
   const loadBlockchainData = async () => {
     // Metamask mounts window.ethereum to our window
@@ -30,7 +31,15 @@ function App() {
     setETHDaddy(ethDaddy)
 
     const maxSupply = await ethDaddy.maxSupply()
-    console.log(maxSupply.toString())
+    const domains = []
+
+    for (var i = 1; i <= maxSupply; i++) {
+      const domain = await ethDaddy.getDomain(i)
+      domains.push(domain)
+    }
+
+    setDomains(domains)
+    console.log(domains)
     
     window.ethereum.on('accountsChanged', async () => {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -60,7 +69,9 @@ function App() {
         <hr />
 
         <div className='cards'>
-          
+          {domains.map((domain, index) => (
+            <Domain domain={domain} ethDaddy={ethDaddy} provider={provider} id={index + 1} key={index} />
+          ))}
         </div>
       </div>
 
